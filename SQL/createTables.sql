@@ -17,21 +17,21 @@ FLUSH PRIVILEGES;
 
 CREATE TABLE `Quotes` (
 	`QuoteID` INT NOT NULL AUTO_INCREMENT,
-	`Title` VARCHAR(100),
-            `Author` VARCHAR(100),
-	`Quote` VARCHAR(1000),
-	KEY `QuoteID` (`QuoteID`) USING BTREE
+	`Title` VARCHAR(100) NOT NULL,
+            `Author` VARCHAR(100) NOT NULL,
+	`Quote` VARCHAR(1000) NOT NULL, //TODO is this enough?
+	PRIMARY KEY (`QuoteID`) 
 );
 
 CREATE TABLE `QuoteTags` (
 	`QuoteID` INT NOT NULL,
 	`Tag` VARCHAR(50),
-	KEY (QuoteID, Tag)
+	PRIMARY KEY (QuoteID, Tag)
 );
 
 CREATE TABLE `Tags` (
-	`Tag` VARCHAR(50),
-	KEY (Tag)
+	`Tag` VARCHAR(50) NOT NULL,
+	PRIMARY KEY (Tag)
 );
 
 ALTER TABLE QuoteTags

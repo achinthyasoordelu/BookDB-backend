@@ -14,7 +14,14 @@ def titleOrAuthorSearch(queryParameter):
 def tagSearch(tags):
     #TODO DB call
     code = 200
-    return json.dumps(tags + " SEARCHED"), code, {"ContentType": "application/json"}
+    return json.dumps({"quote" : "TestQuote", "Title": "TestTitle", "Author" : "TestAuthor",
+                       "tags" : ["Finance", "Business", "Technology"]}), code, {"ContentType": "application/json"}
+
+@app.route("/query/getTags/", methods=["GET"])
+def getTags():
+    #TODO DB call
+    code = 200
+    return json.dumps({"tags" : ["Finance", "Business", "Technology"]}), code, {"ContentType": "application/json"}
 
 @app.route("/query/quoteSearch/<string:queryParameter>", methods=["GET"])
 def quoteSearch(queryParameter):
@@ -23,7 +30,7 @@ def quoteSearch(queryParameter):
     return json.dumps(queryParameter + " SEARCHED"), code, {"ContentType": "application/json"}
 
 @app.route("/mail/sendMail/<string:email>", methods=["GET"])
-def quoteSearch(email):
+def sendEmail(email):
     #TODO DB call, email
     code = 200
     return json.dumps(email + " Email Sent"), code, {"ContentType": "application/json"}
