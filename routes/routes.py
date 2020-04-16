@@ -1,5 +1,7 @@
-from flask import Flask, request, abort, json
-from flask_cors import CORS, cross_origin
+from flask import Flask, json
+from flask_cors import CORS
+import random
+import string
 
 app = Flask(__name__)
 CORS(app)
@@ -14,8 +16,9 @@ def titleOrAuthorSearch(queryParameter):
 def tagSearch(tags):
     #TODO DB call
     code = 200
-    return json.dumps({"quote" : "TestQuote", "Title": "TestTitle", "Author" : "TestAuthor",
-                       "tags" : ["Finance", "Business", "Technology"]}), code, {"ContentType": "application/json"}
+    quote = ''.join(random.choices(string.ascii_letters + string.digits, k = random.randint(500,3500)))
+    return json.dumps({"quote" : quote, "Title": "TestTitle", "Author" : "TestAuthor",
+                       "tags" : [tags]}), code, {"ContentType": "application/json"}
 
 @app.route("/query/getTags/", methods=["GET"])
 def getTags():
