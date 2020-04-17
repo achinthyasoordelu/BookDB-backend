@@ -9,25 +9,27 @@ CORS(app)
 quotesCache = []
 cacheIndex = 0
 
+def testQuotes(tags=None, code=200):
+    global quotesCache
+    global cacheIndex
+    if (len(quotesCache) == 0):  # Populate cache
+        quotes = [''.join(random.choices(string.ascii_letters + string.digits, k=random.randint(500, 3500))) for x in
+                  range(100)]
+        quotesCache = [(json.dumps({"quote": quotes[i], "Title": "TestTitle", "Author": "TestAuthor",
+                                    "tags": [tags]}), code, {"ContentType": "application/json"}) for i in range(100)]
+    quotesToReturn = json.dumps({"quotes": quotesCache[cacheIndex: cacheIndex + 10]})  # TODO indexing past end of array
+    cacheIndex += 10
+    return quotesToReturn
+
 @app.route("/query/titleOrAuthorSearch/<string:queryParameter>", methods=["GET"])
 def titleOrAuthorSearch(queryParameter):
     #TODO DB call
-    code = 200
-    return json.dumps(queryParameter + " SEARCHED"), code, {"ContentType": "application/json"}
+    return testQuotes()
 
 @app.route("/query/tagSearch/<string:tags>", methods=["GET"])
 def tagSearch(tags):
     #TODO DB call
-    code = 200
-    global quotesCache
-    global cacheIndex
-    if (len(quotesCache) == 0): #Populate cache
-        quotes = [''.join(random.choices(string.ascii_letters + string.digits, k = random.randint(500,3500))) for x in range(100)]
-        quotesCache = [(json.dumps({"quote" : quotes[i], "Title": "TestTitle", "Author" : "TestAuthor",
-                           "tags" : [tags]}), code, {"ContentType": "application/json"}) for i in range(100)]
-    quotesToReturn = json.dumps({"quotes": quotesCache[cacheIndex: cacheIndex + 10]}) #TODO indexing past end of array
-    cacheIndex += 10
-    return quotesToReturn
+    return testQuotes(tags, 200)
 
 @app.route("/query/getTags/", methods=["GET"])
 def getTags():
@@ -38,8 +40,7 @@ def getTags():
 @app.route("/query/quoteSearch/<string:queryParameter>", methods=["GET"])
 def quoteSearch(queryParameter):
     #TODO DB call
-    code = 200
-    return json.dumps(queryParameter + " SEARCHED"), code, {"ContentType": "application/json"}
+    return testQuotes()
 
 @app.route("/mail/sendMail/<string:email>", methods=["GET"])
 def sendEmail(email):
