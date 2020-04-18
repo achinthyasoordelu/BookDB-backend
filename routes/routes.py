@@ -26,9 +26,9 @@ def testQuotes(tags=None, code=200):
 @app.route("/insertQuote", methods=["POST"])
 def insertQuote():
     quote = Quote.createQuoteFromRequest(request)
-    print(quote)
+    print("{}, {}, {}, {}".format(quote.title, quote.author, quote.quote, quote.tags))
     #TODO DB call
-    return 200
+    return json.dumps(200)
 
 @app.route("/query/titleOrAuthorSearch/<string:queryParameter>", methods=["GET"])
 def titleOrAuthorSearch(queryParameter):
