@@ -1,11 +1,13 @@
-from flask import Flask, json
+from flask import Flask, json, request
 from flask_cors import CORS
 import random
 import string
+from models import Quote
 
 app = Flask(__name__)
 CORS(app)
 
+#TODO tag cache (don't need to pull tags everytime, once should be good for any single run of the app, probably)
 quotesCache = []
 cacheIndex = 0
 
@@ -20,6 +22,13 @@ def testQuotes(tags=None, code=200):
     quotesToReturn = json.dumps({"quotes": quotesCache[cacheIndex: cacheIndex + 10]})  # TODO indexing past end of array
     cacheIndex += 10
     return quotesToReturn
+
+@app.route("/insertQuote", methods=["POST"])
+def insertQuote():
+    quote = Quote.createQuoteFromRequest(request)
+    print(quote)
+    #TODO DB call
+    return 200
 
 @app.route("/query/titleOrAuthorSearch/<string:queryParameter>", methods=["GET"])
 def titleOrAuthorSearch(queryParameter):
