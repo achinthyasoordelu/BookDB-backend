@@ -18,8 +18,8 @@ FLUSH PRIVILEGES;
 CREATE TABLE `Quotes` (
 	`QuoteID` INT NOT NULL AUTO_INCREMENT,
 	`Title` VARCHAR(100) NOT NULL,
-            `Author` VARCHAR(100) NOT NULL,
-	`Quote` VARCHAR(1000) NOT NULL, //TODO is this enough?
+    `Author` VARCHAR(100) NOT NULL,
+	`Quote` VARCHAR(8192) NOT NULL,
 	PRIMARY KEY (`QuoteID`) 
 );
 
@@ -38,3 +38,15 @@ ALTER TABLE QuoteTags
 ADD CONSTRAINT fk_QuoteTags_QuoteID_Quotes_QuoteID FOREIGN KEY (QuoteID) REFERENCES Quotes (QuoteID) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE QuoteTags
 ADD CONSTRAINT fk_QuoteTags_Tag_Tags_Tag FOREIGN KEY (Tag) REFERENCES Tags (Tag) ON DELETE CASCADE ON UPDATE CASCADE;
+
+SELECT * FROM Tags;
+INSERT INTO Tages VALUES ("Career");
+INSERT INTO Tages VALUES ("Discipline");
+INSERT INTO Tages VALUES ("Failure");
+INSERT INTO Tages VALUES ("Growth");
+INSERT INTO Tages VALUES ("Learning");
+INSERT INTO Tages VALUES ("Mentorship");
+INSERT INTO Tages VALUES ("New Job");
+INSERT INTO Tages VALUES ("Social");
+INSERT INTO Tages VALUES ("Social Intelligence");
+
