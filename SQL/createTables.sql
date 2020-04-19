@@ -40,13 +40,13 @@ ALTER TABLE QuoteTags
 ADD CONSTRAINT fk_QuoteTags_Tag_Tags_Tag FOREIGN KEY (Tag) REFERENCES Tags (Tag) ON DELETE CASCADE ON UPDATE CASCADE;
 
 SELECT * FROM Tags;
-INSERT INTO Tages VALUES ("Career");
-INSERT INTO Tages VALUES ("Discipline");
-INSERT INTO Tages VALUES ("Failure");
-INSERT INTO Tages VALUES ("Growth");
-INSERT INTO Tages VALUES ("Learning");
-INSERT INTO Tages VALUES ("Mentorship");
-INSERT INTO Tages VALUES ("New Job");
-INSERT INTO Tages VALUES ("Social");
-INSERT INTO Tages VALUES ("Social Intelligence");
+INSERT INTO Tags VALUES ("Career");
+INSERT INTO Tags VALUES ("Discipline");
+INSERT INTO Tags VALUES ("Failure");
+INSERT INTO Tags VALUES ("Growth");
+INSERT INTO Tags VALUES ("Learning");
+INSERT INTO Tags VALUES ("Mentorship");
+INSERT INTO Tags VALUES ("New Job");
+INSERT INTO Tags VALUES ("Social");
+INSERT INTO Tags VALUES ("Social Intelligence");
 

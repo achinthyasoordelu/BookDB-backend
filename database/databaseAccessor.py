@@ -23,7 +23,23 @@ class databaseAccessor:
         search = text("SELECT Title, Author, Quote, GROUP_CONCAT(Tag) as 'Tags' FROM quotes NATURAL JOIN quotetags "
                       "WHERE quotes.Quote like :searchTerm  GROUP BY quotes.QuoteID")
         result = self.dbConnection.execute(search, searchTerm="%" + searchTerm + "%")
+        return self.getListFromResult(result)
+
+    def selectByTitleOrAuthor(self, searchTerm):
+        search = text("SELECT Title, Author, Quote, GROUP_CONCAT(Tag) as 'Tags' FROM quotes NATURAL JOIN quotetags "
+                      "WHERE quotes.Title like :searchTerm OR quotes.Author like :searchTerm GROUP BY quotes.QuoteID")
+        result = self.dbConnection.execute(search, searchTerm="%" + searchTerm + "%")
+        return self.getListFromResult(result)
+
+    def getListFromResult(self, result):
         returnList = []
         for row in result:
             returnList.append(dict(row))
         return returnList
+
+    def getTags(self):
+        result = self.dbConnection.execute(models.tagsTable.select())
+        tagDict = {"tags" : []}
+        for row in result:
+            tagDict["tags"].append(row[0])
+        return tagDict

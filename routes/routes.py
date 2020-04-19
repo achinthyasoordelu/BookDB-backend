@@ -10,6 +10,7 @@ CORS(app)
 
 #TODO tag cache (don't need to pull tags everytime, once should be good for any single run of the app, probably)
 quotesCache = []
+tagCache = []
 previousSearch = ""
 cacheIndex = 0
 db = databaseAccessor()
@@ -36,19 +37,24 @@ def insertQuote():
 
 @app.route("/query/titleOrAuthorSearch/<string:queryParameter>", methods=["GET"])
 def titleOrAuthorSearch(queryParameter):
-    #TODO DB call
-    return testQuotes()
+    global previousSearch
+    if previousSearch != queryParameter:
+        resetCache(db.selectByTitleOrAuthor(queryParameter))
+        previousSearch = queryParameter
+    return getQuotesFromCache(), 200, JSON_CONTENT_TYPE
 
 @app.route("/query/tagSearch/<string:tags>", methods=["GET"])
 def tagSearch(tags):
     #TODO DB call
-    return testQuotes(tags, 200, JSON_CONTENT_TYPE)
+    return testQuotes(tags, 200)
 
 @app.route("/query/getTags/", methods=["GET"])
 def getTags():
-    #TODO DB call
+    global tagCache
+    if (len(tagCache) == 0):
+        tagCache = db.getTags()
     code = 200
-    return json.dumps({"tags" : ["Finance", "Business", "Technology"]}), code, {"ContentType": "application/json"}
+    return json.dumps(tagCache), code, {"ContentType": "application/json"}
 
 @app.route("/query/quoteSearch/<string:queryParameter>", methods=["GET"])
 def quoteSearch(queryParameter):
