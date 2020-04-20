@@ -45,8 +45,11 @@ def titleOrAuthorSearch(queryParameter):
 
 @app.route("/query/tagSearch/<string:tags>", methods=["GET"])
 def tagSearch(tags):
-    #TODO DB call
-    return testQuotes(tags, 200)
+    global previousSearch
+    if previousSearch != tags:
+        resetCache(db.searchByTags(tags.split(",")))
+        previousSearch = tags
+    return getQuotesFromCache(), 200, JSON_CONTENT_TYPE
 
 @app.route("/query/getTags/", methods=["GET"])
 def getTags():
