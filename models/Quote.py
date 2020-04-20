@@ -9,7 +9,7 @@ class Quote:
         self.author = author
         self.quote = quote
         self.tags = tags
-prin
+
 def createQuoteFromRequest(request):
     title = request.json["title"]
     author = request.json["author"]
