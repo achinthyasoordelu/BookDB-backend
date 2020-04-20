@@ -43,10 +43,13 @@ SELECT * FROM Tags;
 INSERT INTO Tags VALUES ("Career");
 INSERT INTO Tags VALUES ("Discipline");
 INSERT INTO Tags VALUES ("Failure");
+INSERT INTO Tags VALUES ("Friendship");
 INSERT INTO Tags VALUES ("Growth");
 INSERT INTO Tags VALUES ("Learning");
 INSERT INTO Tags VALUES ("Mentorship");
 INSERT INTO Tags VALUES ("New Job");
+INSERT INTO Tags VALUES ("Networking");
+INSERT INTO Tags VALUES ("Purpose");
 INSERT INTO Tags VALUES ("Social");
 INSERT INTO Tags VALUES ("Social Intelligence");
 

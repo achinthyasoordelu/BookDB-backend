@@ -1,13 +1,11 @@
 from sqlalchemy import create_engine, text
 import database.databaseModels as models
-from sqlalchemy import and_
-from sqlalchemy.sql import select
+
 databaseURI = "mysql://root:****@localhost:3306/bookdb"
 
 class databaseAccessor:
     engine = create_engine(databaseURI)
-    dbConnection = engine.connect() #TODO cache
-    print(engine.table_names())
+    dbConnection = engine.connect()
 
     def insertQuote(self, quote):
         insertQuote = models.quotesTable.insert().values(Title=quote.title, Author=quote.author,Quote=quote.quote)
@@ -39,7 +37,6 @@ class databaseAccessor:
         whereClause = " AND ".join(whereClauses)
         search = "SELECT * FROM (SELECT Title, Author, Quote, GROUP_CONCAT(Tag) as 'Tags' FROM quotes " \
                  "NATURAL JOIN quotetags GROUP BY quotes.QuoteID) AS Quotes WHERE " + whereClause
-        print(search)
         result = self.dbConnection.execute(search)
         return self.getListFromResult(result)
 
