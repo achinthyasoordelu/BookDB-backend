@@ -19,13 +19,13 @@ class databaseAccessor:
             self.dbConnection.execute(insertQuoteTags)
 
     def selectQuotes(self, searchTerm):
-        search = text("SELECT Title, Author, Quote, GROUP_CONCAT(Tag) as 'Tags' FROM quotes NATURAL JOIN quotetags "
+        search = text("SELECT QuoteID, Title, Author, Quote, GROUP_CONCAT(Tag) as 'Tags' FROM quotes NATURAL JOIN quotetags "
                       "WHERE quotes.Quote like :searchTerm  GROUP BY quotes.QuoteID")
         result = self.dbConnection.execute(search, searchTerm="%" + searchTerm + "%")
         return self.getListFromResult(result)
 
     def selectByTitleOrAuthor(self, searchTerm):
-        search = text("SELECT Title, Author, Quote, GROUP_CONCAT(Tag) as 'Tags' FROM quotes NATURAL JOIN quotetags "
+        search = text("SELECT QuoteID, Title, Author, Quote, GROUP_CONCAT(Tag) as 'Tags' FROM quotes NATURAL JOIN quotetags "
                       "WHERE quotes.Title like :searchTerm OR quotes.Author like :searchTerm GROUP BY quotes.QuoteID")
         result = self.dbConnection.execute(search, searchTerm="%" + searchTerm + "%")
         return self.getListFromResult(result)
@@ -35,7 +35,7 @@ class databaseAccessor:
         for tag in tags:
             whereClauses.append("Tags like {}".format("'%%" + tag + "%%'"))
         whereClause = " AND ".join(whereClauses)
-        search = "SELECT * FROM (SELECT Title, Author, Quote, GROUP_CONCAT(Tag) as 'Tags' FROM quotes " \
+        search = "SELECT * FROM (SELECT QuoteID, Title, Author, Quote, GROUP_CONCAT(Tag) as 'Tags' FROM quotes " \
                  "NATURAL JOIN quotetags GROUP BY quotes.QuoteID) AS Quotes WHERE " + whereClause
         result = self.dbConnection.execute(search)
         return self.getListFromResult(result)
