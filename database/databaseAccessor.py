@@ -1,5 +1,5 @@
 from sqlalchemy import create_engine, text
-import database.databaseModels as models
+from database.databaseModels import *
 
 databaseURI = "mysql://root:****@localhost:3306/bookdb"
 
@@ -8,15 +8,38 @@ class databaseAccessor:
     dbConnection = engine.connect()
 
     def insertQuote(self, quote):
-        insertQuote = models.quotesTable.insert().values(Title=quote.title, Author=quote.author,Quote=quote.quote)
-        result = self.dbConnection.execute(insertQuote)
-        quoteID = result.inserted_primary_key[0]
-        self.insertQuoteTags(quoteID, quote.tags)
+        transaction = self.dbConnection.begin()
+        try:
+            insertQuote = quotesTable.insert().values(Title=quote.title, Author=quote.author,Quote=quote.quote)
+            result = self.dbConnection.execute(insertQuote)
+            quoteID = result.inserted_primary_key[0]
+            self.insertQuoteTags(quoteID, quote.tags)
+            transaction.commit()
+        except Exception as e:
+            print(e)
+            transaction.rollback()
+            raise
 
     def insertQuoteTags(self, quoteID, tags):
         for tag in tags:
-            insertQuoteTags = models.quotesTagsTable.insert().values(QuoteID=quoteID, Tag=tag)
+            insertQuoteTags = quotesTagsTable.insert().values(QuoteID=quoteID, Tag=tag)
             self.dbConnection.execute(insertQuoteTags)
+
+    def updateQuote(self, quote):
+        transaction = self.dbConnection.begin()
+        try:
+            updateQuote = quotesTable.update()\
+                .where(quotesTable.c.QuoteID == quote.id)\
+                .values(Title=quote.title, Author=quote.author, Quote=quote.quote)
+            self.dbConnection.execute(updateQuote)
+            removeTags = quotesTagsTable.delete().where(quotesTagsTable.c.QuoteID == quote.id)
+            self.dbConnection.execute(removeTags)
+            self.insertQuoteTags(quote.id, quote.tags)
+            transaction.commit()
+        except Exception as e:
+            print(e)
+            transaction.rollback()
+            raise
 
     def selectQuotes(self, searchTerm):
         search = text("SELECT QuoteID, Title, Author, Quote, GROUP_CONCAT(Tag) as 'Tags' FROM quotes NATURAL JOIN quotetags "
@@ -47,7 +70,7 @@ class databaseAccessor:
         return returnList
 
     def getTags(self):
-        result = self.dbConnection.execute(models.tagsTable.select())
+        result = self.dbConnection.execute(tagsTable.select())
         tagDict = {"tags" : []}
         for row in result:
             tagDict["tags"].append(row[0])

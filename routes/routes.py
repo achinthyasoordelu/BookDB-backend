@@ -18,8 +18,20 @@ JSON_CONTENT_TYPE = {"ContentType": "application/json"}
 @app.route("/insertQuote", methods=["POST"])
 def insertQuote():
     quote = Quote.createQuoteFromRequest(request)
-    db.insertQuote(quote)
-    return json.dumps(200)
+    try:
+        db.insertQuote(quote)
+        return json.dumps(200)
+    except:
+        return json.dumps(500)
+
+@app.route("/updateQuote", methods=["POST"])
+def updateQuote():
+    quote = Quote.createQuoteFromRequest(request)
+    try:
+        db.updateQuote(quote)
+        return json.dumps(200)
+    except:
+        return json.dumps(500)
 
 @app.route("/query/titleOrAuthorSearch/<string:queryParameter>", methods=["GET"])
 def titleOrAuthorSearch(queryParameter):
