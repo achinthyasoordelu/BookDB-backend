@@ -1,7 +1,5 @@
 from flask import Flask, json, request
 from flask_cors import CORS
-import random
-import string
 from models import Quote
 from database.databaseAccessor import databaseAccessor
 
@@ -79,4 +77,5 @@ def getQuotesFromCache():
     return quotesToReturn
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", debug=True)
+    from waitress import serve
+    serve(app, host="0.0.0.0", port=266533)
