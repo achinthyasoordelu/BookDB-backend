@@ -37,6 +37,8 @@ def titleOrAuthorSearch(queryParameter):
     if previousSearch != queryParameter:
         resetCache(db.selectByTitleOrAuthor(queryParameter))
         previousSearch = queryParameter
+    else:
+        resetCacheIndex()
     return getQuotesFromCache(), 200, JSON_CONTENT_TYPE
 
 @app.route("/query/tagSearch/<string:tags>", methods=["GET"])
@@ -45,6 +47,8 @@ def tagSearch(tags):
     if previousSearch != tags:
         resetCache(db.searchByTags(tags.split(",")))
         previousSearch = tags
+    else:
+        resetCacheIndex()
     return getQuotesFromCache(), 200, JSON_CONTENT_TYPE
 
 @app.route("/query/getTags/", methods=["GET"])
@@ -61,6 +65,8 @@ def quoteSearch(queryParameter):
     if previousSearch != queryParameter:
         resetCache(db.selectQuotes(queryParameter))
         previousSearch = queryParameter
+    else:
+        resetCacheIndex()
     return getQuotesFromCache(), 200, JSON_CONTENT_TYPE
 
 def resetCache(newCache):
@@ -69,6 +75,13 @@ def resetCache(newCache):
     quotesCache = newCache
     cacheIndex = 0
 
+def resetCacheIndex():
+    global quotesCache
+    global cacheIndex
+    if (cacheIndex >= len(quotesCache)):
+        cacheIndex = 0
+
+@app.route("/query/continueQuery", methods=["GET"])
 def getQuotesFromCache():
     global quotesCache
     global cacheIndex
