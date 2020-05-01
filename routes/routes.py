@@ -18,6 +18,7 @@ def insertQuote():
     quote = Quote.createQuoteFromRequest(request)
     try:
         db.insertQuote(quote)
+        resetPreviousSearch("")
         return json.dumps(200)
     except:
         return json.dumps(500)
@@ -27,6 +28,7 @@ def updateQuote():
     quote = Quote.createQuoteFromRequest(request)
     try:
         db.updateQuote(quote)
+        resetPreviousSearch("")
         return json.dumps(200)
     except:
         return json.dumps(500)
@@ -36,7 +38,7 @@ def titleOrAuthorSearch(queryParameter):
     global previousSearch
     if previousSearch != queryParameter:
         resetCache(db.selectByTitleOrAuthor(queryParameter))
-        previousSearch = queryParameter
+        resetPreviousSearch(queryParameter)
     else:
         resetCacheIndex()
     return getQuotesFromCache(), 200, JSON_CONTENT_TYPE
@@ -46,7 +48,7 @@ def tagSearch(tags):
     global previousSearch
     if previousSearch != tags:
         resetCache(db.searchByTags(tags.split(",")))
-        previousSearch = tags
+        resetPreviousSearch(tags)
     else:
         resetCacheIndex()
     return getQuotesFromCache(), 200, JSON_CONTENT_TYPE
@@ -64,7 +66,7 @@ def quoteSearch(queryParameter):
     global previousSearch
     if previousSearch != queryParameter:
         resetCache(db.selectQuotes(queryParameter))
-        previousSearch = queryParameter
+        resetPreviousSearch(queryParameter)
     else:
         resetCacheIndex()
     return getQuotesFromCache(), 200, JSON_CONTENT_TYPE
@@ -80,6 +82,10 @@ def resetCacheIndex():
     global cacheIndex
     if (cacheIndex >= len(quotesCache)):
         cacheIndex = 0
+
+def resetPreviousSearch(newSearch):
+    global previousSearch
+    previousSearch = newSearch
 
 @app.route("/query/continueQuery/", methods=["GET"])
 def getQuotesFromCache():
