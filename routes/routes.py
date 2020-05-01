@@ -81,12 +81,13 @@ def resetCacheIndex():
     if (cacheIndex >= len(quotesCache)):
         cacheIndex = 0
 
-@app.route("/query/continueQuery", methods=["GET"])
+@app.route("/query/continueQuery/", methods=["GET"])
 def getQuotesFromCache():
     global quotesCache
     global cacheIndex
     quotesToReturn = json.dumps({"quotes": quotesCache[cacheIndex: cacheIndex + 10]})
     cacheIndex += 10
+    print(quotesToReturn)
     return quotesToReturn
 
 if __name__ == "__main__":
